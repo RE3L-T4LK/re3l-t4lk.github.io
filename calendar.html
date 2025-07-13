@@ -1,0 +1,484 @@
+<!-- To add, edit, or remove events go to line 308 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Club Calendar</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700|Lato:400,700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> <style>
+        /* --- General Body and Container Styles (mostly unchanged) --- */
+        body {
+            background-color: #1a1a1a;
+            color: #f0f0f0;
+            font-family: "Open Sans", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .calendar-container {
+            width: 100%;
+            max-width: 900px;
+            background-color: #282828;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            position: relative; /* Needed for modal positioning */
+        }
+        .calendar-header {
+            background-color: #333333;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #00bcd4;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .calendar-header button {
+            background: none;
+            border: none;
+            color: #f0f0f0;
+            font-size: 1.8em;
+            cursor: pointer;
+            padding: 0 10px;
+            transition: color 0.2s;
+        }
+        .calendar-header button:hover {
+            color: #00bcd4;
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-auto-rows: minmax(80px, auto);
+            border-left: 1px solid #555555;
+            border-top: 1px solid #555555;
+        }
+        .calendar-day-header, .calendar-day {
+            border-right: 1px solid #555555;
+            border-bottom: 1px solid #555555;
+            padding: 10px;
+            text-align: center;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            position: relative; /* Allows positioning of day number and add button */
+        }
+        .calendar-day-header {
+            background-color: #222222;
+            font-weight: 600;
+            color: #f0f0f0;
+            justify-content: center;
+            align-items: center;
+        }
+        .calendar-day {
+            background-color: #1a1a1a;
+            min-height: 80px;
+            color: #f0f0f0;
+            cursor: pointer; /* Indicate clickable days */
+        }
+        .calendar-day.empty, .calendar-day.prev-month, .calendar-day.next-month {
+            background-color: #111111;
+            color: #777777;
+            cursor: default; /* Not clickable for non-month days */
+        }
+        .day-number {
+            font-size: 1.2em;
+            font-weight: 700;
+            position: absolute;
+            top: 5px;
+            left: 5px;
+        }
+        .calendar-day.today {
+            background-color: #00bcd4;
+            color: #1a1a1a;
+        }
+        .calendar-day.today .day-number {
+            color: #1a1a1a;
+        }
+        /* Style for the "Add Event" button within each day */
+        .add-event-button {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background: none;
+            border: none;
+            color: #888888; /* Dim color */
+            font-size: 1.2em;
+            cursor: pointer;
+            padding: 3px;
+            transition: color 0.2s;
+        }
+        .calendar-day:not(.empty):hover .add-event-button {
+            color: #f0f0f0; /* Make visible on hover */
+        }
+        .add-event-button:hover {
+            color: #00bcd4 !important; /* Teal on hover for the button itself */
+        }
+        /* Event display within the day cell */
+        .day-event {
+            font-size: 0.8em;
+            background-color: #00bcd4;
+            color: #1a1a1a;
+            padding: 2px 5px;
+            border-radius: 3px;
+            margin-top: 25px; /* Space below day number */
+            text-align: left;
+            width: calc(100% - 10px); /* Adjust for padding */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; /* For long event titles */
+            cursor: pointer;
+        }
+        .day-event:hover {
+            opacity: 0.9;
+        }
+
+        /* --- Modal Styles --- */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1001; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.7); /* Black w/ opacity */
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #282828; /* Dark grey for modal */
+            margin: auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            animation-name: animatetop;
+            animation-duration: 0.4s;
+            position: relative;
+        }
+        /* Animation for modal */
+        @-webkit-keyframes animatetop {
+            from {top:-300px; opacity:0}
+            to {top:0; opacity:1}
+        }
+        @keyframes animatetop {
+            from {top:-300px; opacity:0}
+            to {top:0; opacity:1}
+        }
+        .close-button {
+            color: #f0f0f0;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: #00bcd4;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .modal-title {
+            font-size: 1.6em;
+            font-weight: 700;
+            color: #00bcd4;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #555555;
+            padding-bottom: 10px;
+        }
+        .modal-body p {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+        }
+        .modal-body p strong {
+            display: inline-block;
+            min-width: 80px; /* Align labels */
+            color: #b0b0b0;
+            margin-right: 10px;
+        }
+        .modal-body i {
+            margin-right: 8px;
+            color: #00bcd4;
+            font-size: 1.1em;
+        }
+        .modal-body .event-detail {
+            flex-grow: 1; /* Take up remaining space */
+            word-wrap: break-word; /* Wrap long text */
+            white-space: normal;
+        }
+
+        /* --- Back button --- */
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: #00bcd4;
+            color: #1a1a1a;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            z-index: 1000;
+            transition: background-color 0.2s;
+        }
+        .back-button:hover {
+            background-color: #0099ac;
+        }
+
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-button">Back to Home</a>
+
+    <div class="calendar-container">
+        <div class="calendar-header">
+            <button id="prevMonthBtn">&lt;</button>
+            <div id="monthYear"></div>
+            <button id="nextMonthBtn">&gt;</button>
+        </div>
+        <div class="calendar-grid" id="calendarGrid">
+            <div class="calendar-day-header">Sun</div>
+            <div class="calendar-day-header">Mon</div>
+            <div class="calendar-day-header">Tue</div>
+            <div class="calendar-day-header">Wed</div>
+            <div class="calendar-day-header">Thu</div>
+            <div class="calendar-day-header">Fri</div>
+            <div class="calendar-day-header">Sat</div>
+            </div>
+    </div>
+
+    <div id="eventModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <div class="modal-title" id="modalEventTitle">Add title and time</div>
+            <div class="modal-body">
+                <p>
+                    <i class="fa fa-calendar"></i>
+                    <strong>Date:</strong> <span id="modalEventDate" class="event-detail"></span>
+                </p>
+                <p>
+                    <i class="fa fa-clock-o"></i>
+                    <strong>Time:</strong> <span id="modalEventTime" class="event-detail"></span>
+                </p>
+                <p>
+                    <i class="fa fa-map-marker"></i>
+                    <strong>Location:</strong> <span id="modalEventLocation" class="event-detail"></span>
+                </p>
+                <p>
+                    <i class="fa fa-align-left"></i>
+                    <strong>Description:</strong> <span id="modalEventDescription" class="event-detail"></span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const calendarGrid = document.getElementById('calendarGrid');
+        const monthYearDisplay = document.getElementById('monthYear');
+        const prevMonthBtn = document.getElementById('prevMonthBtn');
+        const nextMonthBtn = document.getElementById('nextMonthBtn');
+
+        // Modal elements
+        const eventModal = document.getElementById('eventModal');
+        const closeButton = document.querySelector('.close-button');
+        const modalEventTitle = document.getElementById('modalEventTitle');
+        const modalEventDate = document.getElementById('modalEventDate');
+        const modalEventTime = document.getElementById('modalEventTime');
+        const modalEventLocation = document.getElementById('modalEventLocation');
+        const modalEventDescription = document.getElementById('modalEventDescription');
+
+        let currentDate = new Date(); // Start with today's date
+
+        // --- Event Data (You can easily add/modify events here) ---
+        // This is a placeholder for your events.
+        // The key format is 'YYYY-MM-DD'
+        const events = {
+            '2025-07-15': {
+                title: 'Club Meeting',
+                time: '3:00 PM - 4:00 PM',
+                location: 'School Library',
+                description: 'Weekly club meeting to discuss upcoming activities and projects.'
+            },
+            '2025-07-22': {
+                title: 'STEM Workshop: Robotics',
+                time: '10:00 AM - 12:00 PM',
+                location: 'Science Lab (Room 203)',
+                description: 'Introduction to robotics and basic coding for beginners.'
+            },
+            '2025-08-05': { // Example for next month
+                title: 'Guest Speaker: Career in AI',
+                time: '4:30 PM - 5:30 PM',
+                location: 'Auditorium',
+                description: 'Join us for a talk by a leading expert in Artificial Intelligence.'
+            }
+            // Add more events as needed:
+            // 'YYYY-MM-DD': {
+            //     title: 'Your Event Title',
+            //     time: 'Event Time',
+            //     location: 'Event Location',
+            //     description: 'Detailed description of your event.'
+            // }
+        };
+
+        function renderCalendar() {
+            calendarGrid.innerHTML = `
+                <div class="calendar-day-header">Sun</div>
+                <div class="calendar-day-header">Mon</div>
+                <div class="calendar-day-header">Tue</div>
+                <div class="calendar-day-header">Wed</div>
+                <div class="calendar-day-header">Thu</div>
+                <div class="calendar-day-header">Fri</div>
+                <div class="calendar-day-header">Sat</div>
+            `;
+
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+
+            monthYearDisplay.textContent = new Date(year, month).toLocaleString('en-US', {
+                month: 'long',
+                year: 'numeric'
+            });
+
+            const firstDayOfMonth = new Date(year, month, 1).getDay();
+            const lastDayOfMonth = new Date(year, month + 1, 0).getDate();
+
+            const today = new Date();
+            const isCurrentMonth = today.getMonth() === month && today.getFullYear() === year;
+
+            let dayCounter = 1;
+            let totalCells = 0;
+
+            // Fill leading empty days or days from previous month
+            // We'll still show these, but they won't be clickable for adding events
+            for (let i = 0; i < firstDayOfMonth; i++) {
+                const dayDiv = document.createElement('div');
+                dayDiv.classList.add('calendar-day', 'prev-month');
+                const prevMonthDay = new Date(year, month, 0).getDate() - (firstDayOfMonth - 1 - i);
+                dayDiv.innerHTML = `<span class="day-number">${prevMonthDay}</span>`;
+                calendarGrid.appendChild(dayDiv);
+                totalCells++;
+            }
+
+            // Fill current month days
+            for (let i = 1; i <= lastDayOfMonth; i++) {
+                const dayDiv = document.createElement('div');
+                dayDiv.classList.add('calendar-day');
+                if (isCurrentMonth && i === today.getDate()) {
+                    dayDiv.classList.add('today');
+                }
+
+                dayDiv.innerHTML = `<span class="day-number">${i}</span>`;
+
+                // Format the date for lookup in the events object
+                const dateKey = `${year}-${(month + 1).toString().padStart(2, '0')}-${i.toString().padStart(2, '0')}`;
+                const eventForDay = events[dateKey];
+
+                if (eventForDay) {
+                    const eventElement = document.createElement('div');
+                    eventElement.classList.add('day-event');
+                    eventElement.textContent = eventForDay.title; // Display event title
+                    eventElement.dataset.dateKey = dateKey; // Store date key to fetch event details later
+                    dayDiv.appendChild(eventElement);
+
+                    // Add click listener for existing events
+                    eventElement.addEventListener('click', (e) => {
+                        e.stopPropagation(); // Prevent opening for add new event
+                        openEventModal(eventForDay, new Date(year, month, i));
+                    });
+                } else {
+                    // Add the plus icon for adding new events (if no event exists)
+                    // This creates a visual placeholder similar to your image
+                    const addButton = document.createElement('button');
+                    addButton.classList.add('add-event-button');
+                    addButton.innerHTML = '<i class="fa fa-plus"></i>';
+                    dayDiv.appendChild(addButton);
+
+                    // Add click listener for the plus button
+                    addButton.addEventListener('click', (e) => {
+                        e.stopPropagation(); // Prevent the dayDiv click from firing
+                        // For a real "add" function, you'd open an empty form here
+                        // For this example, we'll just show the "Add title and time" text
+                        openAddEventModal(new Date(year, month, i));
+                    });
+                }
+
+
+                calendarGrid.appendChild(dayDiv);
+                totalCells++;
+            }
+
+            // Fill trailing empty days or days from next month to complete the 7x6 grid
+            let nextMonthDayCounter = 1;
+            while (totalCells < 42) {
+                const dayDiv = document.createElement('div');
+                dayDiv.classList.add('calendar-day', 'next-month');
+                dayDiv.innerHTML = `<span class="day-number">${nextMonthDayCounter}</span>`;
+                calendarGrid.appendChild(dayDiv);
+                nextMonthDayCounter++;
+                totalCells++;
+            }
+        }
+
+        // --- Modal Functions ---
+
+        // Function to open the modal for a specific event
+        function openEventModal(eventData, dateObj) {
+            modalEventTitle.textContent = eventData.title;
+            modalEventDate.textContent = dateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+            modalEventTime.textContent = eventData.time;
+            modalEventLocation.textContent = eventData.location;
+            modalEventDescription.textContent = eventData.description;
+            eventModal.style.display = 'flex'; // Show the modal
+        }
+
+        // Function to open the modal for adding a new event
+        function openAddEventModal(dateObj) {
+            modalEventTitle.textContent = 'Add title and time'; // Simulate the blank form title
+            modalEventDate.textContent = dateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+            modalEventTime.textContent = 'Add time'; // Placeholder
+            modalEventLocation.textContent = 'Add location'; // Placeholder
+            modalEventDescription.textContent = 'Add description or a Google Drive attachment'; // Placeholder
+            eventModal.style.display = 'flex'; // Show the modal
+        }
+
+        // Close the modal when the 'x' is clicked
+        closeButton.onclick = function() {
+            eventModal.style.display = 'none';
+        }
+
+        // Close the modal when clicking outside of it
+        window.onclick = function(event) {
+            if (event.target == eventModal) {
+                eventModal.style.display = 'none';
+            }
+        }
+
+        // Event listeners for month navigation
+        prevMonthBtn.addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            renderCalendar();
+        });
+
+        nextMonthBtn.addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            renderCalendar();
+        });
+
+        // Initial render
+        renderCalendar();
+    </script>
+</body>
+</html>
