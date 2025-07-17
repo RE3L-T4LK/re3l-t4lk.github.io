@@ -84,6 +84,12 @@
             flex-direction: column;
             justify-content: center; /* Center content vertically if space allows */
         }
+
+        /* Index.html specific spacing adjustment */
+        #home.content-section {
+            padding-top: 20px; /* Reduced padding from 64px to minimize space */
+            padding-bottom: 64px; /* Keep original bottom padding if desired */
+        }
         
         /* Specific adjustment for board images if they were copied into common style */
         .w3-half.w3-container img {
@@ -95,42 +101,32 @@
         }
         /* Styles for board-member-item specific to board.html, kept here for consistency across all files */
         .board-member-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            padding: 10px;
-            background-color: #222222;
-            border-radius: 8px;
+            background-color: #222222; /* Dark background box */
+            border-radius: 8px; /* Rounded corners for the box */
+            padding: 15px; /* Padding inside the box */
+            margin-bottom: 20px; /* Space between board member boxes */
+            text-align: center; /* Center text and image horizontally */
         }
         .board-member-item img {
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 50%;
-            margin-right: 20px;
-        }
-        .board-member-item .member-info {
-            flex-grow: 1;
+            width: 100%; /* Keep original image width */
+            max-width: 300px; /* Allow images to be larger, but set a max */
+            height: auto; /* Maintain aspect ratio */
+            display: block; /* Make image a block element to center with margin auto */
+            margin: 0 auto 15px auto; /* Center image and add space below it */
+            border-radius: 8px; /* Slightly rounded corners for images */
         }
         .board-member-item h3 {
-            margin: 0;
+            margin: 10px 0 5px 0; /* Space above and below name */
             color: #f0f0f0;
-            font-size: 1.5em;
+            font-size: 1.6em; /* Slightly larger for heading */
         }
         .board-member-item .w3-opacity {
             margin-top: 5px;
             font-size: 1.1em;
         }
-        @media (max-width: 600px) {
-            .board-member-item {
-                flex-direction: column;
-                text-align: center;
-            }
-            .board-member-item img {
-                margin-right: 0;
-                margin-bottom: 15px;
-            }
-        }
+
+        /* No specific @media query for board-member-item anymore as it's always vertical */
+
     </style>
 </head>
 <body>
