@@ -76,6 +76,12 @@
             padding-top: 43px; /* Height of the w3-top navbar */
             margin-left: 250px; /* Space for the sidebar */
         }
+         /* Adjustments for smaller screens (phones/tablets) */
+         @media (max-width: 600px) {
+            .w3-main {
+                margin-left: 0; /* Remove margin when sidebar is hidden on small screens */
+            }
+        }
 
         /* Common content section styling */
         .content-section {
@@ -188,7 +194,7 @@
                 </div>
             </div>
 
-            <div class="w3-row">
+            
                 <div class="w3-half w3-container">
                     <div class="board-member-item">
                         <img src="images/board/RT_board-gautham.jpg" alt="Gautham">
