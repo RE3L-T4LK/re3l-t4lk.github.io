@@ -89,7 +89,7 @@ body {
 /* Specific styling for images within w3-half containers, particularly for board-like layouts */
 .w3-half.w3-container img {
     width: 100%;
-    height: 250px; /* This sets a fixed height, consider 'auto' for aspect ratio or 'max-height' if you want flexibility */
+    height: 100%; /* This sets a fixed height, consider 'auto' for aspect ratio or 'max-height' if you want flexibility */
     object-fit: cover; /* Ensures the image covers the area, cropping if necessary */
     border-radius: 8px;
     margin-bottom: 10px;
@@ -212,7 +212,7 @@ body {
 /* Specific styling for images within w3-half containers, particularly for board-like layouts */
 .w3-half.w3-container img {
     width: 100%;
-    height: 250px; /* This sets a fixed height, consider 'auto' for aspect ratio or 'max-height' if you want flexibility */
+    height: 100%; /* This sets a fixed height, consider 'auto' for aspect ratio or 'max-height' if you want flexibility */
     object-fit: cover; /* Ensures the image covers the area, cropping if necessary */
     border-radius: 8px;
     margin-bottom: 10px;
