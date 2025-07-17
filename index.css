@@ -100,14 +100,6 @@ body {
     margin-bottom: 20px; /* Space between board member boxes */
     text-align: center; /* Center text and image horizontally */
 }
-.board-member-item img {
-    width: 100%; /* Keep original image width */
-    max-width: 375px; /* Allow images to be larger, but set a max */
-    height: auto; /* Maintain aspect ratio */
-    display: block; /* Make image a block element to center with margin auto */
-    margin: 0 auto 15px auto; /* Center image and add space below it */
-    border-radius: 8px; /* Slightly rounded corners for images */
-}
 .board-member-item h3 {
     margin: 10px 0 5px 0; /* Space above and below name */
     color: #f0f0f0;
