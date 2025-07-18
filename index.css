@@ -66,11 +66,17 @@ body {
     padding-top: 43px; /* Height of the w3-top navbar */
     margin-left: 250px; /* Default space for the sidebar on larger screens */
 }
+.w3-display-small{
+    display: none;;
+}
 
 /* Adjustments for smaller screens (phones/tablets) */
 @media (max-width: 600px) {
     .w3-main {
         margin-left: 0; /* Remove margin when sidebar is hidden on small screens */
+    }
+    .w3-display-small{
+        display: block;
     }
 }
 
