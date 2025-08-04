@@ -50,11 +50,99 @@
     <div id="home" class="content-section w3-row w3-padding-64">
       <div class="w3-twothird w3-container">
         <h1 class="w3-text-teal">Welcome to RE3L T4LK!</h1>
-        <p>Re3l T4lk is a program designed to help teens discover real-world career paths and opportunities along with encouraging interests within STEM fields! Every week we'll focus on a different subjects to help you discover your passion. Through in person and virtual events we hope to help teens learn about their true passion and potential.</p>
+        <p>Re3l T4lk is a program designed to help teens discover real-world career paths and opportunities along with encouraging interests within STEM fields! Every week we'll focus on a different subjects to help you discover your passion. Through in person and virtual events we hope to help teens learn about their true passion and potential. Every month RE3L T4LK makes posts about a topic to help students who want to go down that career path. Check out the topics below, and if you want to see a topic or heed help for that career path check out the <i>"suggestions"</i> link in the menu.</p>
       </div>
-      <div class="w3-third w3-container">
-        <img src="images/welcome.jpg" style="width: 375px; height: 200px" alt="Welcome image">
-      </div>
+    </div>
+    <style>
+        /* Main container for the calendar cards */
+        .calendar-container {
+            display: flex; /* Use flexbox for a flexible layout */
+            flex-wrap: wrap; /* Allow items to wrap to a new line */
+            justify-content: center; /* Center the cards horizontally */
+            gap: 20px; /* Space between the cards */
+            margin: 40px 0; /* Add top/bottom margin, but not left/right to align with content */
+        }
+    
+        /* Styling for each individual month card */
+        .month-card {
+            background-color: #333333;
+            border: 1px solid #000000;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            flex: 1 1 150px; /* This makes the cards flexible */
+            /* It means: flex-grow: 1, flex-shrink: 1, flex-basis: 300px */
+            /* Cards will grow to fill space, shrink if needed, and try to be at least 300px wide. */
+            text-align: center;
+            transition: transform 0.2s ease-in-out;
+        }
+    
+        /* Optional: Add a hover effect for a more dynamic feel */
+        .month-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+    
+        /* Style for the month title, matching the teal theme */
+        .month-title {
+            color: #00bcd4; /* This is the W3.CSS teal color */
+            font-family: 'Open Sans', sans-serif;
+            font-size: 24px;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+    
+        /* Style for the topic content */
+        .topic-content p {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color:#f0f0f0;
+            margin: 0;
+        }
+    
+        /* Media query for small screens (e.g., phones) */
+        @media (max-width: 768px) {
+            .calendar-container {
+                flex-direction: column; /* Stack the cards vertically */
+                align-items: center; /* Center the cards on the page */
+            }
+            .month-card {
+                width: 90%; /* Make cards take up most of the screen width */
+                max-width: 400px; /* Keep them from getting too wide on tablets */
+            }
+        }
+    </style>
+    <div class="calendar-container">
+    
+        <div class="month-card">
+            <h2 class="month-title">July 2025</h2>
+            <div class="topic-content">
+                <p>
+                    Biotechnology
+                </p>
+            </div>
+        </div>
+    
+        <div class="month-card">
+            <h2 class="month-title">August 2025</h2>
+            <div class="topic-content">
+                <p>
+                    [TBD]
+                </p>
+            </div>
+        </div>
+    
+        <div class="month-card">
+            <h2 class="month-title">September 2025</h2>
+            <div class="topic-content">
+                <p>
+                    [TBD]
+                </p>
+            </div>
+        </div>
+    
     </div>
 
     <footer id="myFooter">
